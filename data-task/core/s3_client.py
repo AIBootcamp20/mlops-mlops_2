@@ -47,6 +47,25 @@ class S3Manager:
         except Exception as e:
             print(f"목록 조회 실패: {e}")
 
+    def get_file_list(self, prefix: str) -> list[str]:
+
+        # 접두사(prefix)가 폴더 형태인 경우 '/'로 끝나도록 보정
+        if prefix and not prefix.endswith('/'):
+            prefix += '/'
+        response = self.s3_client.list_objects_v2(
+            Bucket=self.bucket_name,
+            Prefix=prefix
+        )
+        if 'Contents' not in response:
+            print(f"조회 결과: {prefix} 경로에 파일이 없습니다.")
+            return []
+
+        # 파일 경로(Key) 목록 추출
+        file_list = [obj['Key'] for obj in response['Contents'] if obj['Key'] != prefix]
+
+        # 정렬하여 반환
+        return sorted(file_list)
+
 
     def check_folders(self):
         try:
@@ -77,12 +96,29 @@ class S3Manager:
             print(f"업로드 실패: {e}")
 
 
-    def download_file(self, s3_path, local_path):
+    def download_file(self, s3_key: str, local_dir: str) -> tuple[bool, str | None]:
+        """S3파일이 있으면 다운로드, 없으면 해당 경로의 파일 목록을 출력"""
+        filename = Path(s3_key).name
+        local_save_path = Path(local_dir) / filename
+        
         try:
-            self.s3.download_file(self.bucket_name, s3_path, local_path)
-            print(f"{local_path}에 다운로드 완료.")
+            # 파일 존재 여부 확인
+            self.s3.head_object(Bucket=self.bucket_name, Key=s3_key)
+
+            # 파일이 존재하면 다운로드 진행
+            local_save_path.parent.mkdir(parents=True, exist_ok=True)
+            self.s3.download_file(self.bucket_name, s3_key, str(local_save_path))
+            print(f"{s3_key} -> {local_save_path}에 다운로드 완료.")
+            return True, str(local_save_path)
+
         except Exception as e:
-            print(f"다운로드 실패: {e}")
+            # 파일이 없을 경우 예외처리
+            print(f"S3에 {s3_key} 파일이 없습니다")
+
+            # 파일 목록 보여주기
+            forder_path = '/'.join(s3_key.split('/')[:-1])
+            self.check_file_in_folder(forder_path)
+            return False, None
 
 
 if __name__ == '__main__':
