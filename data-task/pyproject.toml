@@ -48,8 +48,3 @@ target-version = ["py39", "py310", "py311"]
 python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-addopts = "-v --cov=src --cov=core --cov-report=term-missing"
