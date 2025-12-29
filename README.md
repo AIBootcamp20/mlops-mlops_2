@@ -33,7 +33,7 @@ TMDB(The Movie Database) API를 활용하여 인기 영화 데이터를 수집�
 ├── main.py                # 전체 파이프라인 실행 엔트리포인트
 ├── Dockerfile             # 이미지 빌드 설계도
 ├── requirements.txt       # 의존성 패키지 목록
-
+```
 
 ## Docker를 이용한 실행 방법
 
@@ -47,20 +47,22 @@ TMDB(The Movie Database) API를 활용하여 인기 영화 데이터를 수집�
     cp .env.template .env
     ```
 * **환경 변수 설정**: 생성한 `.env` 파일을 열어 다음 정보를 입력합니다.
-# 1. WANDB 설정
-# Weights & Biases 대시보드 접속을 위한 API 키
-WANDB_API_KEY=your_wandb_api_key_here
-
-# 2. TMDB API 설정
-# 영화 데이터 수집을 위한 TMDB API Read Access Token (또는 API Key)
-TMDB_API_KEY=your_tmdb_api_key_here
-
-# 3. AWS 자격 증명 및 S3 설정
-# S3 버킷 접근 및 모델 업로드를 위한 권한
-AWS_ACCESS_KEY_ID=your_access_key_id_here
-AWS_SECRET_ACCESS_KEY=your_secret_access_key_here
-AWS_REGION=ap-northeast-2
-S3_BUCKET=your_s3_bucket_name_here
+    ```
+    1. WANDB 설정
+    # Weights & Biases 대시보드 접속을 위한 API 키
+    WANDB_API_KEY=your_wandb_api_key_here
+    
+    # 2. TMDB API 설정
+    # 영화 데이터 수집을 위한 TMDB API Read Access Token (또는 API Key)
+    TMDB_API_KEY=your_tmdb_api_key_here
+    
+    # 3. AWS 자격 증명 및 S3 설정
+    # S3 버킷 접근 및 모델 업로드를 위한 권한
+    AWS_ACCESS_KEY_ID=your_access_key_id_here
+    AWS_SECRET_ACCESS_KEY=your_secret_access_key_here
+    AWS_REGION=ap-northeast-2
+    S3_BUCKET=your_s3_bucket_name_here
+    ```
 
 ### 2. 도커 이미지 빌드 (Build)
 
